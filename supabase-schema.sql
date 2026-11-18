@@ -37,6 +37,14 @@ alter table public.loop_listings enable row level security;
 alter table public.loop_listing_likes enable row level security;
 alter table public.loop_inquiries enable row level security;
 
+-- Supabase requires SQL grants in addition to RLS policies. Keep broad access
+-- limited to operations the app needs; the policies below still constrain rows.
+grant usage on schema public to anon, authenticated;
+grant select on public.loop_listings to anon, authenticated;
+grant insert, update, delete on public.loop_listings to authenticated;
+grant select, insert, delete on public.loop_listing_likes to authenticated;
+grant select, insert on public.loop_inquiries to authenticated;
+
 create policy "Listings are visible to everyone" on public.loop_listings for select using (true);
 create policy "Signed-in users can post listings" on public.loop_listings for insert to authenticated with check (auth.uid() = seller_id);
 create policy "Sellers can edit their listings" on public.loop_listings for update to authenticated using (auth.uid() = seller_id) with check (auth.uid() = seller_id);
