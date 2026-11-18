@@ -47,7 +47,10 @@ create policy "Users can like as themselves" on public.loop_listing_likes for in
 create policy "Users can remove their own likes" on public.loop_listing_likes for delete to authenticated using (auth.uid() = user_id);
 
 create policy "Buyers and sellers can read inquiries" on public.loop_inquiries for select to authenticated using (auth.uid() = buyer_id or auth.uid() = seller_id);
-create policy "Buyers can send inquiries" on public.loop_inquiries for insert to authenticated with check (auth.uid() = buyer_id and buyer_id <> seller_id);
+create policy "Buyers can send inquiries" on public.loop_inquiries for insert to authenticated with check (
+  auth.uid() = buyer_id and buyer_id <> seller_id and
+  exists (select 1 from public.loop_listings l where l.id = loop_inquiries.listing_id and l.seller_id = loop_inquiries.seller_id)
+);
 
 -- Atomic claim: only one buyer can claim a scheduled pickup. The conditional
 -- update succeeds for the first request; later requests receive no row.
@@ -72,6 +75,15 @@ end;
 $$;
 grant execute on function public.claim_loop_pickup(uuid) to authenticated;
 revoke execute on function public.claim_loop_pickup(uuid) from public, anon;
+
+do $$ begin
+  if not exists (select 1 from pg_publication_tables where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = 'loop_listings') then
+    execute 'alter publication supabase_realtime add table public.loop_listings';
+  end if;
+  if not exists (select 1 from pg_publication_tables where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = 'loop_listing_likes') then
+    execute 'alter publication supabase_realtime add table public.loop_listing_likes';
+  end if;
+end $$;
 
 create index if not exists loop_listings_created_at_idx on public.loop_listings(created_at desc);
 create index if not exists loop_listings_pickup_at_idx on public.loop_listings(pickup_at) where pickup_at is not null;
