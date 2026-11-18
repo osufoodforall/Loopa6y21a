@@ -54,7 +54,7 @@ create policy "Buyers can send inquiries" on public.loop_inquiries for insert to
 create or replace function public.claim_loop_pickup(p_listing_id uuid)
 returns public.loop_listings
 language plpgsql
-security invoker
+security definer
 set search_path = public
 as $$
 declare claimed public.loop_listings;
@@ -71,6 +71,7 @@ begin
 end;
 $$;
 grant execute on function public.claim_loop_pickup(uuid) to authenticated;
+revoke execute on function public.claim_loop_pickup(uuid) from public, anon;
 
 create index if not exists loop_listings_created_at_idx on public.loop_listings(created_at desc);
 create index if not exists loop_listings_pickup_at_idx on public.loop_listings(pickup_at) where pickup_at is not null;
