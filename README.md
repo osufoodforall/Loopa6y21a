@@ -21,6 +21,6 @@ This is not per-student email verification, and the marketplace does not send tr
 
 The app is static HTML and runs on GitHub Pages with no build step. Enable Pages from the `master` branch and repository root. The Supabase publishable key lives in `config.js`; it is safe for browser use only while row-level security stays enabled. Never put a Supabase secret or service-role key in this repository.
 
-For a new project, run `supabase-schema.sql`, then `supabase-selling-flow-migration.sql` in the Supabase SQL Editor. For the existing DormLoop project, run only the migration. It adds the one-request-per-listing reservation flow, seller availability actions, private pickup conversations, row-level policies, and Realtime updates. In Supabase Authentication settings, enable anonymous sign-ins so visitors can list, like, request, and message.
+For a new project, run `supabase-schema.sql`, then `supabase-selling-flow-migration.sql`, then `supabase-listing-edit-migration.sql` in the Supabase SQL Editor. For the existing DormLoop project, run the selling-flow migration if it has not already been applied, followed by the listing-edit migration. The edit RPC keeps row ownership checks while allowing sellers to change only listing details. In Supabase Authentication settings, enable anonymous sign-ins so visitors can list, like, request, and message.
 
 The request and seller response use database functions that update the listing and request together. This prevents two buyers from reserving the same item during simultaneous requests.

@@ -236,9 +236,17 @@
     };
     if (!id) row.seller_id = user.id;
     const result = id
-      ? await supabase.from('loop_listings').update(row).eq('id', id).eq('sale_status', 'available')
-      : await supabase.from('loop_listings').insert(row);
+      ? await supabase.rpc('update_loop_listing', {
+        p_listing_id: id,
+        p_name: row.name,
+        p_price: row.price,
+        p_description: row.description,
+        p_distance_miles: row.distance_miles,
+        p_category: row.category
+      })
+      : await supabase.from('loop_listings').insert({ ...row, seller_id: user.id });
     if (result.error) return note(result.error.message, true);
+    if (id && !result.data) return note('This listing could not be updated. It may no longer be available.', true);
     $('#modalBg').classList.remove('open');
     form.reset();
     await load();
