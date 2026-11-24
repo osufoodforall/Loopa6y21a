@@ -224,6 +224,7 @@
   $('#listingForm').addEventListener('submit', async (event) => {
     event.preventDefault();
     event.stopImmediatePropagation();
+    const form = event.currentTarget;
     if (!user) return note('Still connecting. Try again in a moment.', true);
     const row = {
       seller_id: user.id,
@@ -239,7 +240,7 @@
       : await supabase.from('loop_listings').insert(row);
     if (result.error) return note(result.error.message, true);
     $('#modalBg').classList.remove('open');
-    event.currentTarget.reset();
+    form.reset();
     await load();
     note(id ? 'Listing updated.' : 'Listing posted. Students can now request it.');
   }, true);
