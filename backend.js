@@ -45,7 +45,7 @@
 
   const status = document.createElement('div');
   status.className = 'backend-status';
-  status.textContent = 'Connecting to DormLoop…';
+  status.textContent = 'Connecting to Dormloop…';
   $('.head').append(status);
 
   const inboxButton = document.createElement('button');
@@ -70,7 +70,7 @@
   inboxDialog.id = 'inboxDialog';
   inboxDialog.innerHTML = `
     <section class="modal" aria-labelledby="inboxTitle">
-      <div class="modal-head"><div><div class="eyebrow">DormLoop marketplace</div><h2 id="inboxTitle">Requests & messages</h2><p>Confirm availability, reserve the item, and arrange pickup privately.</p></div><button type="button" class="close" id="inboxClose" aria-label="Close">×</button></div>
+      <div class="modal-head"><div><div class="eyebrow">Dormloop marketplace</div><h2 id="inboxTitle">Requests & messages</h2><p>Confirm availability, reserve the item, and arrange pickup privately.</p></div><button type="button" class="close" id="inboxClose" aria-label="Close">×</button></div>
       <nav class="inbox-tabs"><button class="active" data-inbox-tab="requests">Requests</button><button data-inbox-tab="conversation">Conversation</button></nav>
       <div id="inboxContent"></div>
     </section>`;
