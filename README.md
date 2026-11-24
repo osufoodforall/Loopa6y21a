@@ -1,4 +1,4 @@
-# Loop
+# DormLoop
 
 Independent student reuse marketplace demo. This project is separate from the Food for All platform.
 
@@ -15,10 +15,12 @@ Independent student reuse marketplace demo. This project is separate from the Fo
 
 FormSubmit is a free, no-server form relay. The first submission triggers an activation message to the destination inbox. Open that message and activate the form before signups can be delivered. FormSubmit receives the submitted email and the request metadata; avoid collecting sensitive information. For production use, publish a privacy notice and consider a dedicated mailing-list service with unsubscribe management.
 
+This is not per-student email verification, and the marketplace does not send transaction emails when an item is requested or reserved. Listing requests and pickup coordination happen inside the app through private Supabase messages.
+
 ## Publish
 
 The app is static HTML and runs on GitHub Pages with no build step. Enable Pages from the `master` branch and repository root. The Supabase publishable key lives in `config.js`; it is safe for browser use only while row-level security stays enabled. Never put a Supabase secret or service-role key in this repository.
 
-For a new project, run `supabase-schema.sql`, then `supabase-selling-flow-migration.sql` in the Supabase SQL Editor. For the existing Loop project, run only the migration. It adds the one-request-per-listing reservation flow, seller availability actions, private pickup conversations, row-level policies, and Realtime updates. In Supabase Authentication settings, enable anonymous sign-ins so visitors can list, like, request, and message.
+For a new project, run `supabase-schema.sql`, then `supabase-selling-flow-migration.sql` in the Supabase SQL Editor. For the existing DormLoop project, run only the migration. It adds the one-request-per-listing reservation flow, seller availability actions, private pickup conversations, row-level policies, and Realtime updates. In Supabase Authentication settings, enable anonymous sign-ins so visitors can list, like, request, and message.
 
 The request and seller response use database functions that update the listing and request together. This prevents two buyers from reserving the same item during simultaneous requests.
