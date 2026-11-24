@@ -226,15 +226,15 @@
     event.stopImmediatePropagation();
     const form = event.currentTarget;
     if (!user) return note('Still connecting. Try again in a moment.', true);
+    const id = $('#editId').value;
     const row = {
-      seller_id: user.id,
       name: $('#itemName').value.trim(),
       price: Number($('#itemPrice').value),
       description: $('#itemDescription').value.trim(),
       distance_miles: Number($('#itemDistance').value),
       category: $('#itemCategory').value
     };
-    const id = $('#editId').value;
+    if (!id) row.seller_id = user.id;
     const result = id
       ? await supabase.from('loop_listings').update(row).eq('id', id).eq('sale_status', 'available')
       : await supabase.from('loop_listings').insert(row);
